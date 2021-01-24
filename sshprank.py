@@ -32,7 +32,7 @@ import warnings
 import logging
 import masscan
 import paramiko
-import shodan
+#import shodan
 import mmap
 from collections import deque
 
@@ -339,7 +339,7 @@ def grab_banner(host, port):
 def portscan():
   try:
     m = masscan.PortScanner()
-    m.scan(hosts='', ports='0', arguments=opts['masscan_opts'], sudo=True)
+    m.scan(hosts='', ports='0', arguments=opts['masscan_opts'])
   except masscan.NetworkConnectionError as err:
     log('\n')
     log('no sshds found or network unreachable', 'error')
