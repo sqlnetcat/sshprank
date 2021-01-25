@@ -149,7 +149,7 @@ opts = {
   'bthreads': 70,
   'ctimeout': 5,
   'rtimeout': 3,
-  'logfile': 'owned.txt',
+  'logfile': 'ups.txt',
   'exit': False,
   'verbose': False
 }
