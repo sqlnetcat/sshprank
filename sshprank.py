@@ -420,8 +420,7 @@ def crack_login(host, port, username, password):
               if not opts['cmd_no_out']:
                 rl = stdout.readlines()
                 if len(rl) > 0:
-                  log(f'ssh command result for: \'{line.rstrip()}\'', 'good',
-                    pre_esc='\n')
+                  log(f'ssh command result for: \'{line.rstrip()}\'', 'good', pre_esc='\n')
                   for line in rl:
                     log(f'{line}')
         else:
@@ -479,21 +478,25 @@ def run_threads(host, ports, val='single'):
     for port in ports:
       if port not in excluded[host]:
         e.submit(crack_login, host, port, opts['user'], opts['pass'])
+        print(host, port, opts['user'], opts['pass'])
 
     with ThreadPoolExecutor(opts['lthreads']) as exe:
       if 'userlist' in opts and 'passlist' in opts:
         for u in opts['userlist']:
           for p in opts['passlist']:
             exe.submit(crack_login, host, port, u.rstrip(), p.rstrip())
+            print(host, port, opts['userlist'], opts['passlist'])
           pf.close()
 
       if 'userlist' in opts and 'passlist' not in opts:
         for u in opts['userlist']:
           exe.submit(crack_login, host, port, u.rstrip(), opts['pass'])
+          print(host, port, opts['userlist'], opts['pass'])
 
       if 'passlist' in opts and 'userlist' not in opts:
         for p in opts['passlist']:
           exe.submit(crack_login, host, port, opts['user'], p.rstrip())
+          print(host, port, opts['passlist'], opts['user'])
 
       if 'combolist' in opts:
         for line in opts['combolist']:
