@@ -1,23 +1,5 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*- ########################################################
-#               ____                     _ __                                  #
-#    ___  __ __/ / /__ ___ ______ ______(_) /___ __                            #
-#   / _ \/ // / / (_-</ -_) __/ // / __/ / __/ // /                            #
-#  /_//_/\_,_/_/_/___/\__/\__/\_,_/_/ /_/\__/\_, /                             #
-#                                           /___/ team                         #
-#                                                                              #
-# sshprank                                                                     #
-# A fast SSH mass-scanner, login cracker and banner grabber tool using the     #
-# python-masscan and shodan module.                                            #
-#                                                                              #
-# NOTES                                                                        #
-# quick'n'dirty code                                                           #
-#                                                                              #
-# AUTHOR                                                                       #
-# noptrix                                                                      #
-#                                                                              #
-################################################################################
-
+# -*- coding: utf-8 -*- #
 
 import getopt
 import os
@@ -217,8 +199,7 @@ def parse_cmdline(cmdline):
   global opts
 
   try:
-    _opts, _args = getopt.getopt(cmdline,
-      'h:l:m:s:b:r:c:N:u:U:p:P:C:x:S:X:B:T:R:o:evVHaA')
+    _opts, _args = getopt.getopt(cmdline, 'h:l:m:s:b:r:c:N:u:U:p:P:C:x:S:X:B:T:R:o:evVHaA')
     for o, a in _opts:
       if o == '-h':
         opts['targets'] = parse_target(a)
@@ -397,8 +378,7 @@ def crack_login(host, port, username, password):
 
   try:
     if port not in excluded[host]:
-      cli.connect(host, port, username, password, timeout=opts['ctimeout'],
-        allow_agent=False, look_for_keys=False, auth_timeout=opts['ctimeout'])
+      cli.connect(host, port, username, password, timeout=opts['ctimeout'], allow_agent=False, look_for_keys=False, auth_timeout=opts['ctimeout'])
       login = f'{host}:{port}:{username}:{password}'
       log_targets(f'{login}\n', opts['logfile'])
       if opts['verbose']:
@@ -515,10 +495,10 @@ def run_threads(host, ports, val='single'):
   return
 
 
+
 def gen_ipv4addr():
   try:
-    ip = ipaddress.ip_address('.'.join(str(
-      random.randint(0, 255)) for _ in range(4)))
+    ip = ipaddress.ip_address('.'.join(str(random.randint(0, 255)) for _ in range(4)))
     if not ip.is_loopback and not ip.is_private and not ip.is_multicast:
       return str(ip)
   except:
@@ -581,7 +561,7 @@ def crack_scan():
     with ThreadPoolExecutor(1) as e:
       future = e.submit(crack_multi)
       status(future, 'cracking found sshds\r')
-    log('\n')
+      log('\n')
   else:
     log('no sshds found :(', _type='warn')
 
@@ -634,8 +614,7 @@ def shodan_search():
       if len(r) > 0:
         banner = r['data'].split('\n')[0]
         if opts['verbose']:
-          log(f'found sshd: {r["ip_str"]}:{r["port"]}:{banner}', 'good',
-            esc='\n')
+          log(f'found sshd: {r["ip_str"]}:{r["port"]}:{banner}', 'good', esc='\n')
         stargets.append(f'{r["ip_str"]}:{r["port"]}:{banner}\n')
   except shodan.APIError as e:
     log(f'shodan error: {str(e)}', 'error')
